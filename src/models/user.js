@@ -10,6 +10,12 @@ const userSchema = new Schema(
     image: {
       type: String,
     },
+    favoriteFoods: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Food",
+      },
+    ],
   },
   {
     versionKey: false,
@@ -17,30 +23,36 @@ const userSchema = new Schema(
   }
 );
 
+// userSchema.plugin(mongoosePaginate);
+
 class User extends mongoose.model("User", userSchema) {
   static async register(req) {
     let params = {
       name: req.body.name,
     };
 
-    if (req.file) {
-      let image = await imageKit.upload({
-        file: req.file.buffer.toString("base64"),
-        fileName: `IMG-${Date.now()}`,
-      });
+    params.favoriteFoods = req.body.foods.map((food) => {
+      return food;
+    });
 
-      let url = imageKit.url({
-        src: image.url,
-        transformation: [
-          {
-            height: "300",
-            width: "400",
-          },
-        ],
-      });
+    // if (req.file) {
+    //   let image = await imageKit.upload({
+    //     file: req.file.buffer.toString("base64"),
+    //     fileName: `IMG-${Date.now()}`,
+    //   });
 
-      params.image = url;
-    }
+    //   let url = imageKit.url({
+    //     src: image.url,
+    //     transformation: [
+    //       {
+    //         height: "300",
+    //         width: "400",
+    //       },
+    //     ],
+    //   });
+
+    //   params.image = url;
+    // }
 
     return new Promise((resolve, rejects) => {
       this.create(params).then((data) => {
@@ -49,6 +61,29 @@ class User extends mongoose.model("User", userSchema) {
           data: data,
         });
       });
+    });
+  }
+
+  static getAll() {
+    return new Promise((resolve, rejects) => {
+      this.find({})
+        .populate({
+          path: "favoriteFoods",
+          // select: "name",
+          options: { sort: { createdAt: -1 } },
+        })
+        .then((data) => {
+          return resolve({
+            success: true,
+            data: data,
+          });
+        })
+        .catch((error) => {
+          return rejects({
+            success: false,
+            error: error,
+          });
+        });
     });
   }
 }

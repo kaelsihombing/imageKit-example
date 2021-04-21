@@ -1,8 +1,8 @@
-const User = require("../models/user");
+const Food = require("../models/food");
 
-exports.registerUser = async (req, res) => {
+exports.addFood = async (req, res) => {
   try {
-    let result = await User.register(req);
+    let result = await Food.addFood(req);
     if (result.success === true) {
       return res.status(201).json({
         success: true,
@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    let result = await User.getAll();
+    let result = await Food.getAll();
     if (result.success === true) {
       return res.status(201).json({
         success: true,

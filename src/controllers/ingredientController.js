@@ -1,8 +1,8 @@
-const User = require("../models/user");
+const Ingredient = require("../models/ingredient");
 
-exports.registerUser = async (req, res) => {
+exports.addIngredient = async (req, res) => {
   try {
-    let result = await User.register(req);
+    let result = await Ingredient.addIngredient(req);
     if (result.success === true) {
       return res.status(201).json({
         success: true,
@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    let result = await User.getAll();
+    let result = await Ingredient.getAll(req);
     if (result.success === true) {
       return res.status(201).json({
         success: true,
