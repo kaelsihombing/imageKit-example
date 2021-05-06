@@ -35,9 +35,9 @@ class Food extends mongoose.model("Food", foodSchema) {
     });
   }
 
-  static getAll() {
+  static getAll(food) {
     return new Promise((resolve, rejects) => {
-      this.find({})
+      this.find({ name: { $regex: food, $options: "i" } })
         .then((data) => {
           return resolve({
             success: true,

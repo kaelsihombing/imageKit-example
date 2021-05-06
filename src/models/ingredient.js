@@ -41,7 +41,7 @@ class Ingredient extends mongoose.model("Ingredient", ingredientSchema) {
   static getAll(req) {
     let options = {
       page: req.query.page,
-      limit: 4,
+      limit: 5,
       pagination: true,
       sort: "-updatedAt",
     };

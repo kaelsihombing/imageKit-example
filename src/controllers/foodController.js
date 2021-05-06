@@ -19,7 +19,7 @@ exports.addFood = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    let result = await Food.getAll();
+    let result = await Food.getAll(req.query.like);
     if (result.success === true) {
       return res.status(201).json({
         success: true,
